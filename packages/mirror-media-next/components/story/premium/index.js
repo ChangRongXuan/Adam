@@ -234,13 +234,23 @@ export default function StoryPremiumStyle({
     isAdvertised = false,
   } = postData
 
+  /**
+   * Because `sections` can be filtered by `where` in GraphQL based on whether `state` is active,
+   * but `sectionsInInputOrder` doesn't have `where`.
+   *
+   * Need to filter state of `sectionsInInputOrder` to match the results of sections.
+   */
+  const activeSectionsOrder = sectionsInInputOrder?.filter(
+    (section) => section.state === 'active'
+  )
+  const sectionsWithOrdered =
+    activeSectionsOrder && activeSectionsOrder.length
+      ? activeSectionsOrder
+      : sections
+
   const shouldShowArticleMask =
     !isLoggedIn || postContent.type === 'trimmedContent'
   const h2AndH3Block = getContentBlocksH2H3(postContent.data)
-  const sectionsWithOrdered =
-    sectionsInInputOrder && sectionsInInputOrder.length
-      ? sectionsInInputOrder
-      : sections
   const [section] = sectionsWithOrdered
   const sectionLabelFirst = getSectionLabelFirst(sectionsWithOrdered)
   const writersWithOrdered =

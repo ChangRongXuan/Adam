@@ -69,10 +69,20 @@ function StoryAmpPage({ postData }) {
     sectionsInInputOrder = [],
   } = postData
 
+  /**
+   * Because `sections` can be filtered by `where` in GraphQL based on whether `state` is active,
+   * but `sectionsInInputOrder` doesn't have `where`.
+   *
+   * Need to filter state of `sectionsInInputOrder` to match the results of sections.
+   */
+  const activeSectionsOrder = sectionsInInputOrder?.filter(
+    (section) => section.state === 'active'
+  )
   const sectionsWithOrdered =
-    sectionsInInputOrder && sectionsInInputOrder.length
-      ? sectionsInInputOrder
+    activeSectionsOrder && activeSectionsOrder.length
+      ? activeSectionsOrder
       : sections
+
   const [section] = sectionsWithOrdered
 
   const sectionSlot = getAmpGptDataSlotSection(section)
