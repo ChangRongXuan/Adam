@@ -27,7 +27,7 @@ export const section = gql`
 `
 
 export const sectionWithCategory = gql`
-  fragment section on Section {
+  fragment sectionWithCategory on Section {
     id
     name
     slug

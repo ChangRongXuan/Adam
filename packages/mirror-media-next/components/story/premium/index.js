@@ -20,7 +20,7 @@ import Footer from '../../shared/footer'
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { Z_INDEX } from '../../../constants/index'
 import { SECTION_IDS } from '../../../constants/index'
-import { getCategoryOfWineSlug } from '../../../utils'
+import { getCategoryOfWineSlug, getActiveOrderSection } from '../../../utils'
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
@@ -234,23 +234,14 @@ export default function StoryPremiumStyle({
     isAdvertised = false,
   } = postData
 
-  /**
-   * Because `sections` can be filtered by `where` in GraphQL based on whether `state` is active,
-   * but `sectionsInInputOrder` doesn't have `where`.
-   *
-   * Need to filter state of `sectionsInInputOrder` to match the results of sections.
-   */
-  const activeSectionsOrder = sectionsInInputOrder?.filter(
-    (section) => section.state === 'active'
-  )
-  const sectionsWithOrdered =
-    activeSectionsOrder && activeSectionsOrder.length
-      ? activeSectionsOrder
-      : sections
-
   const shouldShowArticleMask =
     !isLoggedIn || postContent.type === 'trimmedContent'
   const h2AndH3Block = getContentBlocksH2H3(postContent.data)
+
+  const sectionsWithOrdered = getActiveOrderSection(
+    sections,
+    sectionsInInputOrder
+  )
   const [section] = sectionsWithOrdered
   const sectionLabelFirst = getSectionLabelFirst(sectionsWithOrdered)
   const writersWithOrdered =

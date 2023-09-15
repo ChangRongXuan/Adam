@@ -101,7 +101,6 @@ export default function HeroImageAndVideo({
             imagesWebP={heroImage.resizedWebp}
             loadingImage={'/images/loading@4x.gif'}
             defaultImage={'/images/default-og-img.png'}
-            debugMode={true}
             alt={heroCaption ? heroCaption : title}
             objectFit={'cover'}
             priority={true}

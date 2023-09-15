@@ -20,6 +20,7 @@ import Date from '../shared/date'
 import ButtonCopyLink from '../shared/button-copy-link'
 import ButtonSocialNetworkShare from '../shared/button-social-network-share'
 import Aside from '../shared/aside'
+import { getActiveOrderSection } from '../../../utils'
 
 /**
  * @typedef {import('../../../apollo/fragments/post').Post} PostData
@@ -144,20 +145,10 @@ export default function StoryWideStyle({ postData, postContent }) {
     tags = [],
   } = postData
 
-  /**
-   * Because `sections` can be filtered by `where` in GraphQL based on whether `state` is active,
-   * but `sectionsInInputOrder` doesn't have `where`.
-   *
-   * Need to filter state of `sectionsInInputOrder` to match the results of sections.
-   */
-  const activeSectionsOrder = sectionsInInputOrder?.filter(
-    (section) => section.state === 'active'
+  const sectionsWithOrdered = getActiveOrderSection(
+    sections,
+    sectionsInInputOrder
   )
-  const sectionsWithOrdered =
-    activeSectionsOrder && activeSectionsOrder.length
-      ? activeSectionsOrder
-      : sections
-
   const [section] = sectionsWithOrdered
 
   const relatedsWithOrdered =

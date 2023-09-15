@@ -1,6 +1,9 @@
 import styled from 'styled-components'
 import DraftRenderBlock from '../shared/draft-renderer-block'
-import { copyAndSliceDraftBlock, getBlocksCount } from '../../../utils/story'
+import {
+  copyAndSliceDraftBlock,
+  getSlicedIndexAndUnstyledBlocksCount,
+} from '../../../utils/story'
 import dynamic from 'next/dynamic'
 import useWindowDimensions from '../../../hooks/use-window-dimensions'
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
@@ -23,6 +26,10 @@ const Wrapper = styled.section`
 const ContentContainer = styled.section`
   margin-top: 32px;
   margin-bottom: 32px;
+
+  .readr-media-react-image {
+    background-color: transparent !important;
+  }
 `
 const StyledGPTAd = styled(GPTAd)`
   width: 100%;
@@ -60,48 +67,47 @@ export default function ArticleContent({
   const shouldShowAd = useDisplayAd(hiddenAdvertised)
   const windowDimensions = useWindowDimensions()
 
-  const blocksLength = getBlocksCount(content)
+  const { slicedIndex, unstyledBlocksCount } =
+    getSlicedIndexAndUnstyledBlocksCount(content)
 
   //The GPT advertisement for the `mobile` version includes `AT1` & `AT2`
   const MB_contentJsx = (
     <Wrapper>
       <DraftRenderBlock
-        rawContentBlock={copyAndSliceDraftBlock(content, 0, 1)}
+        rawContentBlock={copyAndSliceDraftBlock(content, 0, slicedIndex.mb[0])}
         contentLayout="normal"
         wrapper={(children) => <ContentContainer>{children}</ContentContainer>}
       />
 
-      {blocksLength > 1 && (
+      {unstyledBlocksCount > 1 && (
         <>
           {shouldShowAd && (
             <StyledGPTAd pageKey={pageKeyForGptAd} adKey="MB_AT1" />
           )}
-
-          <DraftRenderBlock
-            rawContentBlock={copyAndSliceDraftBlock(content, 1, 5)}
-            contentLayout="normal"
-            wrapper={(children) => (
-              <ContentContainer>{children}</ContentContainer>
-            )}
-          />
         </>
       )}
+      <DraftRenderBlock
+        rawContentBlock={copyAndSliceDraftBlock(
+          content,
+          slicedIndex.mb[0],
+          slicedIndex.mb[1]
+        )}
+        contentLayout="normal"
+        wrapper={(children) => <ContentContainer>{children}</ContentContainer>}
+      />
 
-      {blocksLength > 5 && (
+      {unstyledBlocksCount > 5 && (
         <>
           {shouldShowAd && (
             <StyledGPTAd pageKey={pageKeyForGptAd} adKey="MB_AT2" />
           )}
-
-          <DraftRenderBlock
-            rawContentBlock={copyAndSliceDraftBlock(content, 5)}
-            contentLayout="normal"
-            wrapper={(children) => (
-              <ContentContainer>{children}</ContentContainer>
-            )}
-          />
         </>
       )}
+      <DraftRenderBlock
+        rawContentBlock={copyAndSliceDraftBlock(content, slicedIndex.mb[1])}
+        contentLayout="normal"
+        wrapper={(children) => <ContentContainer>{children}</ContentContainer>}
+      />
     </Wrapper>
   )
 
@@ -109,26 +115,23 @@ export default function ArticleContent({
   const PC_contentJsx = (
     <Wrapper>
       <DraftRenderBlock
-        rawContentBlock={copyAndSliceDraftBlock(content, 0, 3)}
+        rawContentBlock={copyAndSliceDraftBlock(content, 0, slicedIndex.pc[0])}
         contentLayout="normal"
         wrapper={(children) => <ContentContainer>{children}</ContentContainer>}
       />
 
-      {blocksLength > 3 && (
+      {unstyledBlocksCount > 3 && (
         <>
           {shouldShowAd && (
             <StyledGPTAd pageKey={pageKeyForGptAd} adKey="PC_AT1" />
           )}
-
-          <DraftRenderBlock
-            rawContentBlock={copyAndSliceDraftBlock(content, 3)}
-            contentLayout="normal"
-            wrapper={(children) => (
-              <ContentContainer>{children}</ContentContainer>
-            )}
-          />
         </>
       )}
+      <DraftRenderBlock
+        rawContentBlock={copyAndSliceDraftBlock(content, slicedIndex.pc[0])}
+        contentLayout="normal"
+        wrapper={(children) => <ContentContainer>{children}</ContentContainer>}
+      />
     </Wrapper>
   )
 

@@ -141,25 +141,21 @@ export default function LatestNewsItem({ itemData }) {
    * If latest news is an external article, `itemData.heroImage` would be a url,
    * such as 'https://www-somewebsite.com/some-image.jpeg'.
    * @param {string | Article['heroImage']} heroImage
-   * @returns {any}
+   * @returns {{images: Record<string,string> , imagesWebp: Record<string,string> | null}}
    */
   const getRenderImages = (heroImage) => {
-    /**
-     * @type {string | { original:string }}
-     */
-    let images = { original: '' }
-    let imagesWebp = null
     if (typeof heroImage === 'string') {
-      images = { original: heroImage }
-      imagesWebp = null
-    } else if (heroImage?.resized) {
-      images = heroImage.resized
-    } else if (heroImage?.resizedWebp) {
-      imagesWebp = heroImage?.resizedWebp
+      const images = { original: heroImage }
+      const imagesWebp = null
+      return { images, imagesWebp }
     }
+
+    const images = heroImage?.resized ? heroImage.resized : { original: '' }
+    const imagesWebp = heroImage?.resizedWebp ? heroImage?.resizedWebp : null
     return { images, imagesWebp }
   }
-  const { images, imagesWebP } = getRenderImages(itemData.heroImage)
+  const { images, imagesWebp } = getRenderImages(itemData.heroImage)
+
   return (
     <Link
       href={itemData.articleHref}
@@ -173,7 +169,7 @@ export default function LatestNewsItem({ itemData }) {
             defaultImage="/images/default-og-img.png"
             loadingImage="images/loading.gif"
             images={images}
-            imagesWebP={imagesWebP}
+            imagesWebP={imagesWebp}
             objectFit="cover"
             rwd={{
               mobile: '488px',

@@ -2,7 +2,7 @@
 //TODO: adjust function `handleFetchPopularNews` and `handleFetchPopularNews`, make it more reuseable in other pages.
 
 import { useCallback, useState } from 'react'
-import client from '../../../apollo/apollo-client'
+
 import styled, { css } from 'styled-components'
 import Link from 'next/link'
 import axios from 'axios'
@@ -12,7 +12,6 @@ import ArticleBrief from '../shared/brief'
 import AsideArticleList from '../../../components/story/normal/aside-article-list'
 import FbPagePlugin from '../../../components/story/normal/fb-page-plugin'
 import SocialNetworkService from '../../../components/story/normal/social-network-service'
-import SubscribeInviteBanner from '../../../components/story/normal/subscribe-invite-banner'
 import SupportMirrorMediaBanner from '../shared/support-mirrormedia-banner'
 import MagazineInviteBanner from '../../../components/story/shared/magazine-invite-banner'
 import RelatedArticleList from '../../../components/story/normal/related-article-list'
@@ -26,11 +25,16 @@ import {
   transformTimeDataIntoDotFormat,
   getCategoryOfWineSlug,
 } from '../../../utils'
-import { fetchAsidePosts } from '../../../apollo/query/posts'
-import { URL_STATIC_POPULAR_NEWS, API_TIMEOUT } from '../../../config/index.mjs'
+
+import {
+  URL_STATIC_POPULAR_NEWS,
+  API_TIMEOUT,
+  URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION,
+} from '../../../config/index.mjs'
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { Z_INDEX } from '../../../constants/index'
 import { getSectionGPTPageKey } from '../../../utils/ad'
+import { getActiveOrderSection } from '../../../utils'
 
 const DableAd = dynamic(() => import('../../ads/dable/dable-ad'), {
   ssr: false,
@@ -524,19 +528,10 @@ export default function StoryNormalStyle({
     hiddenAdvertised = false,
   } = postData
 
-  /**
-   * Because `sections` can be filtered by `where` in GraphQL based on whether `state` is active,
-   * but `sectionsInInputOrder` doesn't have `where`.
-   *
-   * Need to filter state of `sectionsInInputOrder` to match the results of sections.
-   */
-  const activeSectionsOrder = sectionsInInputOrder?.filter(
-    (section) => section.state === 'active'
+  const sectionsWithOrdered = getActiveOrderSection(
+    sections,
+    sectionsInInputOrder
   )
-  const sectionsWithOrdered =
-    activeSectionsOrder && activeSectionsOrder.length
-      ? activeSectionsOrder
-      : sections
 
   const relatedsWithOrdered =
     relatedsInInputOrder && relatedsInInputOrder.length
@@ -567,26 +562,28 @@ export default function StoryNormalStyle({
       /**
        * @type {import('@apollo/client').ApolloQueryResult<{posts: AsideArticleData[]}>}
        */
-      const res = await client.query({
-        query: fetchAsidePosts,
-        variables: {
-          take: 6,
-          sectionSlug: section?.slug || 'news',
-          storySlug: slug,
-        },
+      const res = await axios({
+        method: 'get',
+        url: `${URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION}/section_${
+          section?.slug || 'news'
+        }.json`,
+        timeout: API_TIMEOUT,
       })
-      return res.data?.posts.map((post) => {
-        const sectionsWithOrdered =
-          post.sectionsInInputOrder && post.sectionsInInputOrder.length
-            ? post.sectionsInInputOrder
-            : post.sections
-        return { sectionsWithOrdered, ...post }
-      })
+      return res.data?.posts
+        .filter((post) => post.slug !== slug)
+        .slice(0, 6)
+        .map((post) => {
+          const sectionsWithOrdered = getActiveOrderSection(
+            post.sections,
+            post.sectionsInInputOrder
+          )
+          return { sectionsWithOrdered, ...post }
+        })
     } catch (err) {
       console.error(err)
       return []
     }
-  }, [section, slug])
+  }, [slug, section.slug])
 
   /**
    * @returns {Promise<AsideArticleDataContainSectionsWithOrdered[] | []>}
@@ -604,10 +601,10 @@ export default function StoryNormalStyle({
 
       const popularNews = data
         .map((post) => {
-          const sectionsWithOrdered =
-            post.sectionsInInputOrder && post.sectionsInInputOrder.length
-              ? post.sectionsInInputOrder
-              : post.sections
+          const sectionsWithOrdered = getActiveOrderSection(
+            post.sections,
+            post.sectionsInInputOrder
+          )
           return { sectionsWithOrdered, ...post }
         })
         .slice(0, 6)
@@ -688,7 +685,6 @@ export default function StoryNormalStyle({
           </DateUnderContent>
           <SupportMirrorMediaBanner />
           <SocialNetworkServiceSmall />
-          <SubscribeInviteBanner />
 
           <RelatedArticleList
             relateds={relatedsWithOrdered}

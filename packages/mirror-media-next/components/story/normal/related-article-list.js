@@ -168,7 +168,6 @@ export default function RelatedArticleList({
               <Image
                 images={related.heroImage?.resized}
                 imagesWebP={related.heroImage?.resizedWebp}
-                debugMode={true}
                 alt={related.title}
                 rwd={{
                   mobile: '500px',
