@@ -1,27 +1,18 @@
 import Head from 'next/head'
 import { GlobalStyles } from '../styles/global-styles'
 import Script from 'next/script'
-import { initGA, logPageView } from '../utils/programmable-search/analytics'
-import { useRouter } from 'next/router'
-import { GA_TRACKING_ID, URL_MIRROR_MEDIA } from '../config'
+import { GA_TRACKING_ID, GTM_ID, URL_MIRROR_MEDIA } from '../config'
 import { useEffect } from 'react'
 import { RedirectUrlContext } from '../context/redirectUrl'
 import { ThemeProvider } from 'styled-components'
 import { theme } from '../styles/theme'
+import gtag from '../utils/programmable-search/gtag'
+import TagManager from 'react-gtm-module'
 
 function MyApp({ Component, pageProps }) {
-  const router = useRouter()
-
-  useEffect(() => {
-    initGA()
-    // `routeChangeComplete` won't run for the first page load unless the query string is
-    // hydrated later on, so here we log a page view if this is the first render and
-    // there's no query string
-    if (!router.asPath.includes('?')) {
-      logPageView()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  useEffect(() => {}, [])
+  gtag.init()
+  TagManager.initialize({ gtmId: GTM_ID })
 
   const getLayout = Component.getLayout || ((page) => page)
   const { redirectUrl } = pageProps
