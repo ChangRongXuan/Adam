@@ -24,7 +24,8 @@ import {
   transformTimeDataIntoDotFormat,
   getActiveOrderSection,
 } from '../../utils'
-
+import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
+import GPT_Placeholder from '../ads/gpt/gpt-placeholder'
 import {
   URL_STATIC_POPULAR_NEWS,
   URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION,
@@ -37,7 +38,7 @@ import {
 } from '../../utils/external'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import { Z_INDEX } from '../../constants/index'
-import { getPageKeyByPartnerSlug } from '../../utils/ad'
+import { getPageKeyByPartnerShowOnIndex } from '../../utils/ad'
 
 const DableAd = dynamic(() => import('../ads/dable/dable-ad'), {
   ssr: false,
@@ -265,22 +266,14 @@ const AsideFbPagePlugin = styled(FbPagePlugin)`
 const StyledGPTAd_HD = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
-  margin: 20px auto 0px;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 970px;
-    max-height: 250px;
-  }
 `
+
+//Because AT1, AT2, AT3 contain full-screen size ads content, should not set max-width and max-height
 
 const StyledGPTAd_MB_AT3 = styled(GPTAd)`
   display: block;
   width: 100%;
   height: auto;
-  max-height: 280px;
-  max-width: 336px;
   margin: 0 auto;
 
   ${({ theme }) => theme.breakpoint.xl} {
@@ -293,8 +286,6 @@ const StyledGPTAd_MB_E1 = styled(GPTAd)`
   margin: 24px auto;
   width: 100%;
   height: auto;
-  max-height: 280px;
-  max-width: 336px;
 
   ${({ theme }) => theme.breakpoint.xl} {
     display: none;
@@ -333,8 +324,6 @@ const StyledGPTAd_PC_E1 = styled(GPTAd)`
     margin: 0;
     width: 100%;
     height: auto;
-    max-height: 250px;
-    max-width: 300px;
   }
 `
 
@@ -346,8 +335,6 @@ const StyledGPTAd_PC_E2 = styled(GPTAd)`
     margin: 0;
     width: 100%;
     height: auto;
-    max-height: 250px;
-    max-width: 300px;
   }
 `
 
@@ -370,8 +357,6 @@ const StyledGPTAd_PC_R1 = styled(GPTAd)`
     display: block;
     width: 100%;
     height: auto;
-    max-width: 300px;
-    max-height: 600px;
     margin: 0 auto;
   }
 `
@@ -383,8 +368,6 @@ const StyledGPTAd_PC_R2 = styled(GPTAd)`
     display: block;
     width: 100%;
     height: auto;
-    max-width: 300px;
-    max-height: 600px;
     margin: 20px auto;
   }
 `
@@ -392,18 +375,14 @@ const StyledGPTAd_PC_R2 = styled(GPTAd)`
 const StyledGPTAd_FT = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
   margin: 20px auto;
 
   ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 970px;
-    max-height: 250px;
     margin: 35px auto;
   }
 `
 
-const StickyGPTAd_MB_ST = styled(GPTAd)`
+const StickyGPTAd_MB_ST = styled(GPTMbStAd)`
   display: block;
   position: fixed;
   left: 0;
@@ -411,8 +390,6 @@ const StickyGPTAd_MB_ST = styled(GPTAd)`
   bottom: 0;
   width: 100%;
   height: auto;
-  max-width: 320px;
-  max-height: 50px;
   margin: auto;
   z-index: ${Z_INDEX.coverHeader};
 
@@ -531,12 +508,14 @@ export default function ExternalNormalStyle({ external }) {
 
   return (
     <>
-      {shouldShowAd && (
-        <StyledGPTAd_HD
-          pageKey={getPageKeyByPartnerSlug(partner.slug)}
-          adKey="HD"
-        />
-      )}
+      <GPT_Placeholder>
+        {shouldShowAd && (
+          <StyledGPTAd_HD
+            pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
+            adKey="HD"
+          />
+        )}
+      </GPT_Placeholder>
 
       <Main>
         <Article>
@@ -573,7 +552,7 @@ export default function ExternalNormalStyle({ external }) {
 
           {shouldShowAd && (
             <StyledGPTAd_MB_AT3
-              pageKey={getPageKeyByPartnerSlug(partner.slug)}
+              pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
               adKey="MB_AT3"
             />
           )}
@@ -585,7 +564,7 @@ export default function ExternalNormalStyle({ external }) {
 
           {shouldShowAd && (
             <StyledGPTAd_MB_E1
-              pageKey={getPageKeyByPartnerSlug(partner.slug)}
+              pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
               adKey="MB_E1"
             />
           )}
@@ -617,11 +596,11 @@ export default function ExternalNormalStyle({ external }) {
             {shouldShowAd && (
               <GPTAdContainer>
                 <StyledGPTAd_PC_E1
-                  pageKey={getPageKeyByPartnerSlug(partner.slug)}
+                  pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
                   adKey="PC_E1"
                 />
                 <StyledGPTAd_PC_E2
-                  pageKey={getPageKeyByPartnerSlug(partner.slug)}
+                  pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
                   adKey="PC_E2"
                 />
               </GPTAdContainer>
@@ -637,7 +616,7 @@ export default function ExternalNormalStyle({ external }) {
         <Aside>
           {shouldShowAd && (
             <StyledGPTAd_PC_R1
-              pageKey={getPageKeyByPartnerSlug(partner.slug)}
+              pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
               adKey="PC_R1"
             />
           )}
@@ -651,7 +630,7 @@ export default function ExternalNormalStyle({ external }) {
 
           {shouldShowAd && (
             <StyledGPTAd_PC_R2
-              pageKey={getPageKeyByPartnerSlug(partner.slug)}
+              pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
               adKey="PC_R2"
             />
           )}
@@ -696,12 +675,11 @@ export default function ExternalNormalStyle({ external }) {
       {shouldShowAd && (
         <>
           <StyledGPTAd_FT
-            pageKey={getPageKeyByPartnerSlug(partner.slug)}
+            pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
             adKey="FT"
           />
           <StickyGPTAd_MB_ST
-            pageKey={getPageKeyByPartnerSlug(partner.slug)}
-            adKey="MB_ST"
+            pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
           />
         </>
       )}

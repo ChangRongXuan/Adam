@@ -1,7 +1,8 @@
-import { DONATION_PAGE_URL } from './config/index.mjs'
+import { DONATION_PAGE_URL, SITE_BASE_PATH } from './config/index.mjs'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  basePath: SITE_BASE_PATH,
   reactStrictMode: true,
   swcMinify: true,
   compiler: {

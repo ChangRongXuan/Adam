@@ -55,15 +55,16 @@ const getMicroAdUnitId = (
 }
 
 /**
- * Returns the GPT pageKey associated with partner's slug.
+ * Returns the GPT pageKey associated with partner's showOnIndex.
  *
- * @param {string} partnerSlug - The slug of the partner.
- * @return {string} - The GPT pageKey associated with the partner slug.
- * Returns 'SECTION_IDS.news' if partnerSlug is valid, otherwise returns 'other'.
+ * @param {boolean} partnerShowOnIndex - The showOnIndex of the partner.
+ * @return {string} - The GPT pageKey associated with the partner showOnIndex.
+ * Returns 'SECTION_IDS.news' if partnerShowOnIndex is valid, otherwise returns 'other'.
  */
-function getPageKeyByPartnerSlug(partnerSlug = '') {
-  const validPartnerSlugs = ['ebc', 'healthnews', 'zuchi', '5678news']
-  return validPartnerSlugs.includes(partnerSlug) ? SECTION_IDS['news'] : 'other'
+function getPageKeyByPartnerShowOnIndex(partnerShowOnIndex) {
+  return partnerShowOnIndex
+    ? SECTION_IDS['news'] ?? 'other'
+    : SECTION_IDS['life'] ?? 'other'
 }
 
 /**
@@ -93,7 +94,6 @@ const getSectionGPTPageKey = (sectionSlug) => {
 
   return GptPageKey
 }
-
 
 /**
  * Determining whether to insert a `PopIn` advertisement after a specific post index.
@@ -139,13 +139,20 @@ const getPopInId = (index = 0) => {
 }
 
 /**
+ * TODO: the logic of selecting amp-gpt-ad unit is different from gpt-ad in normal page.
+ * Should refactor to prevent logic inconsistent.
+ *
  * Retrieves the data slot section for a given section name.
  *
  * @param {Object} section - The section object containing a name property.
  * @param {string} section.name - The name of the section.
+ * @param {boolean} isMemberArticle - The name of the section.
  * @return {string} The corresponding data slot section for the given section name.
  */
-function getAmpGptDataSlotSection(section) {
+function getAmpGptDataSlotSection(section, isMemberArticle) {
+  if (isMemberArticle) {
+    return 'member'
+  }
   const name = section?.name
 
   switch (true) {
@@ -167,6 +174,8 @@ function getAmpGptDataSlotSection(section) {
       return 'wat'
     case name?.includes('美食旅遊'):
       return 'tra'
+    case name?.includes('生活'):
+      return 'life'
     default:
       return 'oth'
   }
@@ -175,7 +184,7 @@ function getAmpGptDataSlotSection(section) {
 export {
   needInsertMicroAdAfter,
   getMicroAdUnitId,
-  getPageKeyByPartnerSlug,
+  getPageKeyByPartnerShowOnIndex,
   getSectionGPTPageKey,
   needInsertPopInAdAfter,
   getPopInId,

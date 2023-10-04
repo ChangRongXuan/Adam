@@ -21,6 +21,8 @@ import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { Z_INDEX } from '../../../constants/index'
 import { SECTION_IDS } from '../../../constants/index'
 import { getCategoryOfWineSlug, getActiveOrderSection } from '../../../utils'
+import GPTMbStAd from '../../../components/ads/gpt/gpt-mb-st-ad'
+import GPT_Placeholder from '../../ads/gpt/gpt-placeholder'
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
@@ -82,31 +84,19 @@ const SocialMedia = styled.li`
 const StyledGPTAd_HD = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
-  margin: 20px auto 0px;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 970px;
-    max-height: 250px;
-  }
 `
 
 const StyledGPTAd_FT = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
   margin: 20px auto;
 
   ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 970px;
-    max-height: 250px;
     margin: 35px auto;
   }
 `
 
-const StickyGPTAd_MB_ST = styled(GPTAd)`
+const StickyGPTAd_MB_ST = styled(GPTMbStAd)`
   display: block;
   position: fixed;
   left: 0;
@@ -114,8 +104,6 @@ const StickyGPTAd_MB_ST = styled(GPTAd)`
   bottom: 0;
   width: 100%;
   height: auto;
-  max-width: 320px;
-  max-height: 50px;
   margin: auto;
   z-index: ${Z_INDEX.coverHeader};
 
@@ -128,7 +116,6 @@ const GPTAdContainer = styled.div`
   display: block;
   width: 100%;
   height: auto;
-  max-height: 280px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -137,7 +124,6 @@ const GPTAdContainer = styled.div`
 
   ${({ theme }) => theme.breakpoint.xl} {
     margin: 52px auto 0px;
-    max-height: 250px;
   }
 `
 
@@ -146,8 +132,6 @@ const StyledGPTAd_E1 = styled(GPTAd)`
   margin: 0px auto;
   width: 100%;
   height: auto;
-  max-height: 250px;
-  max-width: 300px;
 
   ${({ theme }) => theme.breakpoint.xl} {
     margin: 0;
@@ -162,8 +146,6 @@ const StyledGPTAd_PC_E2 = styled(GPTAd)`
     margin: 0;
     width: 100%;
     height: auto;
-    max-height: 250px;
-    max-width: 300px;
   }
 `
 
@@ -286,7 +268,11 @@ export default function StoryPremiumStyle({
         }}
       />
 
-      {shouldShowAd && <StyledGPTAd_HD pageKey={pageKeyForGptAd} adKey="HD" />}
+      <GPT_Placeholder>
+        {shouldShowAd && (
+          <StyledGPTAd_HD pageKey={pageKeyForGptAd} adKey="HD" />
+        )}
+      </GPT_Placeholder>
 
       <Main>
         <article>
@@ -362,7 +348,7 @@ export default function StoryPremiumStyle({
 
       {shouldShowAd && <StyledGPTAd_FT pageKey={pageKeyForGptAd} adKey="FT" />}
       {shouldShowAd && noCategoryOfWineSlug ? (
-        <StickyGPTAd_MB_ST pageKey={pageKeyForGptAd} adKey="MB_ST" />
+        <StickyGPTAd_MB_ST pageKey={pageKeyForGptAd} />
       ) : null}
 
       <Footer footerType="default" />

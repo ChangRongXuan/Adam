@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import styled from 'styled-components'
 
 const HeaderWrapper = styled.header`
@@ -9,7 +8,7 @@ const HeaderWrapper = styled.header`
   justify-content: center;
 `
 
-const HeaderLogo = styled(Link)`
+const HeaderLogo = styled.a`
   position: relative;
   width: 73.5px;
 `
@@ -25,7 +24,7 @@ export default function AmpHeader() {
         <amp-img
           width="73.5"
           height="31.08"
-          src="/images/mirror-media-logo.svg"
+          src="/images-next/mirror-media-logo.svg"
           alt="mirrormedia"
           layout="responsive"
         />

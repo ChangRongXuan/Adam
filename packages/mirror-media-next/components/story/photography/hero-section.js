@@ -42,7 +42,6 @@ const TitleBox = styled.div`
   margin: 0 auto;
   text-align: center;
   margin-bottom: 120px;
-  font-family: var(--notosansTC-font);
 
   margin-top: 52px;
   ${({ theme }) => theme.breakpoint.md} {
@@ -150,7 +149,7 @@ export default function HeroSection({
         heroImage?.resized?.w1200 ||
         heroImage?.resized?.w800 ||
         heroImage?.resized?.w480 ||
-        '/images/default-og-img.png'
+        '/images-next/default-og-img.png'
       }
       isIOS={isIOSDevice}
     >

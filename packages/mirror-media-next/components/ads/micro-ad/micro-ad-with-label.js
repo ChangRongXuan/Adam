@@ -34,7 +34,6 @@ const typeListing = css`
         padding: 8px;
         color: white;
         background-color: #bcbcbc;
-        font-family: 'PingFang TC';
         font-style: normal;
         font-weight: 600;
         font-size: 18px;
@@ -116,8 +115,14 @@ const typeHome = css`
   > a {
     display: inline-block;
     position: relative;
-    height: 134px;
     min-width: 134px;
+
+    .latest-list_item_img {
+      padding-top: 100%;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: 50%;
+    }
   }
 
   // Mobile: AD Detail
@@ -299,7 +304,6 @@ const typeStory = css`
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'PingFang TC';
       font-style: normal;
       font-weight: 600;
       font-size: 18px;
@@ -359,7 +363,6 @@ const typeStory = css`
             position: absolute;
             bottom: 0;
             right: 103px;
-            font-family: 'PingFang TC';
             font-style: normal;
             font-weight: 600;
             font-size: 12px;

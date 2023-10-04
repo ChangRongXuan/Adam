@@ -21,6 +21,11 @@ import {
   fetchYoutubeVideoByVideoId,
 } from '../../utils/api/video'
 import FullScreenAds from '../../components/ads/full-screen-ads'
+import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
+import {
+  GPT_Placeholder_Desktop,
+  GPT_Placeholder_MobileAndTablet,
+} from '../../components/ads/gpt/gpt-placeholder'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -57,27 +62,12 @@ const ContentWrapper = styled.div`
 const StyledGPTAd_HD = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
-  margin: 8px auto;
-
-  ${({ theme }) => theme.breakpoint.md} {
-    margin: 24px auto;
-  }
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 970px;
-    max-height: 250px;
-    margin: 0px auto 28px;
-    order: -1;
-  }
 `
 
 const StyledGPTAd_E1 = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
+
   margin: 20px auto 0px;
 
   ${({ theme }) => theme.breakpoint.md} {
@@ -92,26 +82,20 @@ const StyledGPTAd_E1 = styled(GPTAd)`
 const StyledGPTAd_FT = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
   margin: 20px auto 0px;
 
   ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 970px;
-    max-height: 250px;
     margin: 28px auto 0px;
   }
 `
 
-const StickyGPTAd = styled(GPTAd)`
+const StickyGPTAd = styled(GPTMbStAd)`
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
   width: 100%;
   height: auto;
-  max-width: 320px;
-  max-height: 50px;
   margin: auto;
   z-index: ${Z_INDEX.coverHeader};
 
@@ -119,6 +103,13 @@ const StickyGPTAd = styled(GPTAd)`
     display: none;
   }
 `
+
+const GPT_PLACEHOLDER_SIZES = {
+  mobile: { width: '300px', height: '250px', margin: '8px auto' },
+  tablet: { width: '300px', height: '250px', margin: '24px auto' },
+  desktop: { width: '970px', height: '250px', margin: '0px auto 28px' },
+}
+
 /**
  * @param {Object} props
  * @param {import('../../type/youtube').YoutubeVideo} props.video
@@ -140,9 +131,14 @@ export default function Video({ video, latestVideos, headerData }) {
       footer={{ type: 'default' }}
     >
       <Wrapper>
+        <GPT_Placeholder_Desktop rwd={GPT_PLACEHOLDER_SIZES}>
+          {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="PC_HD" />}
+        </GPT_Placeholder_Desktop>
         <YoutubeIframe videoId={video.id} gtmClassName="GTM-video-yt-play" />
 
-        {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="HD" />}
+        <GPT_Placeholder_MobileAndTablet rwd={GPT_PLACEHOLDER_SIZES}>
+          {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="MB_HD" />}
+        </GPT_Placeholder_MobileAndTablet>
 
         <ContentWrapper>
           <YoutubeArticle video={video} />
@@ -160,7 +156,7 @@ export default function Video({ video, latestVideos, headerData }) {
         {shouldShowAd && (
           <>
             <StyledGPTAd_FT pageKey="videohub" adKey="FT" />
-            <StickyGPTAd pageKey="videohub" adKey="MB_ST" />
+            <StickyGPTAd pageKey="videohub" />
             <FullScreenAds />
           </>
         )}

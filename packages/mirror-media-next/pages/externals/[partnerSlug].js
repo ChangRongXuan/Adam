@@ -14,11 +14,13 @@ import { fetchPartnerBySlug } from '../../apollo/query/partner'
 import { getExternalPartnerColor } from '../../utils/external'
 import { fetchExternalsByPartnerSlug } from '../../utils/api/externals'
 
-import { getPageKeyByPartnerSlug } from '../../utils/ad'
+import { getPageKeyByPartnerShowOnIndex } from '../../utils/ad'
 import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 
 import FullScreenAds from '../../components/ads/full-screen-ads'
+import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
+import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -68,25 +70,15 @@ const PartnerTitle = styled.h1`
 const StyledGPTAd = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
-  margin: 20px auto 0px;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 970px;
-    max-height: 250px;
-  }
 `
 
-const StickyGPTAd = styled(GPTAd)`
+const StickyGPTAd = styled(GPTMbStAd)`
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
   width: 100%;
   height: auto;
-  max-width: 320px;
-  max-height: 50px;
   margin: auto;
   z-index: ${Z_INDEX.coverHeader};
 
@@ -126,12 +118,14 @@ export default function ExternalPartner({
       footer={{ type: 'default' }}
     >
       <PartnerContainer>
-        {shouldShowAd && (
-          <StyledGPTAd
-            pageKey={getPageKeyByPartnerSlug(partner.slug)}
-            adKey="HD"
-          />
-        )}
+        <GPT_Placeholder>
+          {shouldShowAd && (
+            <StyledGPTAd
+              pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
+              adKey="HD"
+            />
+          )}
+        </GPT_Placeholder>
         <PartnerTitle partnerColor={getExternalPartnerColor(partner)}>
           {partner?.name}
         </PartnerTitle>
@@ -144,8 +138,7 @@ export default function ExternalPartner({
         />
         {shouldShowAd && (
           <StickyGPTAd
-            pageKey={getPageKeyByPartnerSlug(partner.slug)}
-            adKey="MB_ST"
+            pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
           />
         )}
         {shouldShowAd && <FullScreenAds />}

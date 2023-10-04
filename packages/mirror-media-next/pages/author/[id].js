@@ -18,6 +18,8 @@ const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
 import FullScreenAds from '../../components/ads/full-screen-ads'
+import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
+import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
 
 const AuthorContainer = styled.main`
   width: 320px;
@@ -52,17 +54,9 @@ const AuthorTitle = styled.h1`
 const StyledGPTAd = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
-  margin: 20px auto 0px;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 970px;
-    max-height: 250px;
-  }
 `
 
-const StickyGPTAd = styled(GPTAd)`
+const StickyGPTAd = styled(GPTMbStAd)`
   position: fixed;
   left: 0;
   right: 0;
@@ -104,7 +98,9 @@ export default function Author({ postsCount, posts, author, headerData }) {
       footer={{ type: 'default' }}
     >
       <AuthorContainer>
-        {shouldShowAd && <StyledGPTAd pageKey="other" adKey="HD" />}
+        <GPT_Placeholder>
+          {shouldShowAd && <StyledGPTAd pageKey="other" adKey="HD" />}
+        </GPT_Placeholder>
         {authorName && <AuthorTitle>{authorName}</AuthorTitle>}
         <AuthorArticles
           postsCount={postsCount}
@@ -112,7 +108,7 @@ export default function Author({ postsCount, posts, author, headerData }) {
           authorId={author.id}
           renderPageSize={RENDER_PAGE_SIZE}
         />
-        {shouldShowAd && <StickyGPTAd pageKey="other" adKey="MB_ST" />}
+        {shouldShowAd && <StickyGPTAd pageKey="other" />}
         {shouldShowAd && <FullScreenAds />}
       </AuthorContainer>
     </Layout>

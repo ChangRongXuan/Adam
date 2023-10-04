@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import { GlobalStyles } from '../styles/global-styles'
-import Script from 'next/script'
-import { GA_TRACKING_ID, GTM_ID, URL_MIRROR_MEDIA } from '../config'
+import { GTM_ID, URL_MIRROR_MEDIA } from '../config'
 import { useEffect } from 'react'
 import { RedirectUrlContext } from '../context/redirectUrl'
 import { ThemeProvider } from 'styled-components'
@@ -10,9 +9,10 @@ import gtag from '../utils/programmable-search/gtag'
 import TagManager from 'react-gtm-module'
 
 function MyApp({ Component, pageProps }) {
-  useEffect(() => {}, [])
-  gtag.init()
-  TagManager.initialize({ gtmId: GTM_ID })
+  useEffect(() => {
+    gtag.init()
+    TagManager.initialize({ gtmId: GTM_ID })
+  }, [])
 
   const getLayout = Component.getLayout || ((page) => page)
   const { redirectUrl } = pageProps
@@ -28,19 +28,6 @@ function MyApp({ Component, pageProps }) {
         />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
-        strategy="afterInteractive"
-      />
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){window.dataLayer.push(arguments);}
-          gtag('js', new Date());
-
-          gtag('config', '${GA_TRACKING_ID}');
-        `}
-      </Script>
       <GlobalStyles />
       <ThemeProvider theme={theme}>
         <RedirectUrlContext.Provider value={redirectUrl || URL_MIRROR_MEDIA}>

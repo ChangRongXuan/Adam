@@ -24,6 +24,8 @@ const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
 import FullScreenAds from '../../components/ads/full-screen-ads'
+import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
+import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -147,17 +149,9 @@ const PremiumCategoryTitle = styled.h1`
 const StyledGPTAd = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
-  margin: 20px auto 0px;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 970px;
-    max-height: 250px;
-  }
 `
 
-const StickyGPTAd = styled(GPTAd)`
+const StickyGPTAd = styled(GPTMbStAd)`
   position: fixed;
   left: 0;
   right: 0;
@@ -206,7 +200,8 @@ export default function Category({
   //The type of GPT ad to display depends on which category the section belongs to.
   //If category not have related-section, use `other` ad units
   const sectionSlug = category?.sections?.[0]?.slug ?? ''
-  const GptPageKey = getSectionGPTPageKey(sectionSlug) ?? 'other'
+  const GptPageKey =
+    getSectionGPTPageKey(isPremium ? 'member' : sectionSlug) ?? 'other'
 
   return (
     <Layout
@@ -215,7 +210,9 @@ export default function Category({
       footer={{ type: 'default' }}
     >
       <CategoryContainer isPremium={isPremium}>
-        {shouldShowAd && <StyledGPTAd pageKey={GptPageKey} adKey="HD" />}
+        <GPT_Placeholder>
+          {shouldShowAd && <StyledGPTAd pageKey={GptPageKey} adKey="HD" />}
+        </GPT_Placeholder>
 
         {isPremium ? (
           <PremiumCategoryTitle sectionName={sectionSlug}>
@@ -236,7 +233,7 @@ export default function Category({
         />
 
         {shouldShowAd && isNotWineCategory ? (
-          <StickyGPTAd pageKey={GptPageKey} adKey="MB_ST" />
+          <StickyGPTAd pageKey={GptPageKey} />
         ) : null}
         <WineWarning categories={[category]} />
         {isNotWineCategory && <FullScreenAds />}

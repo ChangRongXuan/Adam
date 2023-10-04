@@ -198,7 +198,7 @@ const Label = styled.div`
 const Title = styled.p`
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   overflow: hidden;
   color: ${({ theme, color }) => theme.color.brandColor[color]};
   font-size: 18px;
@@ -209,6 +209,7 @@ const Title = styled.p`
     font-size: 20px;
     line-height: 32px;
     margin-top: 0;
+    -webkit-line-clamp: 3;
   }
   ${({ theme }) => theme.breakpoint.xl} {
     margin-top: 8px;
@@ -349,8 +350,8 @@ export default function AsideArticleList({
                   images={item?.heroImage?.resized}
                   imagesWebP={item?.heroImage?.resizedWebp}
                   alt={item.title}
-                  loadingImage={'/images/loading.gif'}
-                  defaultImage={'/images/default-og-img.png'}
+                  loadingImage={'/images-next/loading.gif'}
+                  defaultImage={'/images-next/default-og-img.png'}
                   rwd={{ mobile: '276px', tablet: '266px', desktop: '120px' }}
                 />
               </Link>

@@ -15,6 +15,8 @@ import {
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import { getSectionGPTPageKey } from '../../utils/ad'
 import FullScreenAds from '../../components/ads/full-screen-ads'
+import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
+import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -66,17 +68,9 @@ const SectionTitle = styled.h1`
 const StyledGPTAd = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
-  margin: 20px auto 0px;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 970px;
-    max-height: 250px;
-  }
 `
 
-const StickyGPTAd = styled(GPTAd)`
+const StickyGPTAd = styled(GPTMbStAd)`
   position: fixed;
   left: 0;
   right: 0;
@@ -119,13 +113,14 @@ export default function Section({ postsCount, posts, section, headerData }) {
       footer={{ type: 'default' }}
     >
       <SectionContainer>
-        {shouldShowAd && (
-          <StyledGPTAd
-            pageKey={getSectionGPTPageKey(section.slug)}
-            adKey="HD"
-          />
-        )}
-
+        <GPT_Placeholder>
+          {shouldShowAd && (
+            <StyledGPTAd
+              pageKey={getSectionGPTPageKey(section.slug)}
+              adKey="HD"
+            />
+          )}
+        </GPT_Placeholder>
         {sectionName && (
           <SectionTitle sectionName={section.slug}>{sectionName}</SectionTitle>
         )}
@@ -138,10 +133,7 @@ export default function Section({ postsCount, posts, section, headerData }) {
         />
 
         {shouldShowAd && (
-          <StickyGPTAd
-            pageKey={getSectionGPTPageKey(section.slug)}
-            adKey="MB_ST"
-          />
+          <StickyGPTAd pageKey={getSectionGPTPageKey(section.slug)} />
         )}
         {shouldShowAd && <FullScreenAds />}
       </SectionContainer>

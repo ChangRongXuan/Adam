@@ -17,6 +17,11 @@ import {
 import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import FullScreenAds from '../../components/ads/full-screen-ads'
+import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad.js'
+import {
+  GPT_Placeholder_Desktop,
+  GPT_Placeholder_MobileAndTablet,
+} from '../../components/ads/gpt/gpt-placeholder.js'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -35,32 +40,12 @@ const Wrapper = styled.div`
   }
 `
 
-const StyledGPTAd_PC_HD = styled(GPTAd)`
-  display: none;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    width: 100%;
-    height: auto;
-    margin: 20px auto 0px;
-    max-width: 970px;
-    max-height: 250px;
-    display: block;
-  }
-`
-
-const StyledGPTAd_MB_HD = styled(GPTAd)`
+const StyledGPTAd_HD = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
-  margin: 20px auto 0px;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    display: none;
-  }
 `
 
-const StickyGPTAd_MB_ST = styled(GPTAd)`
+const StickyGPTAd_MB_ST = styled(GPTMbStAd)`
   display: block;
   position: fixed;
   left: 0;
@@ -68,8 +53,6 @@ const StickyGPTAd_MB_ST = styled(GPTAd)`
   bottom: 0;
   width: 100%;
   height: auto;
-  max-width: 320px;
-  max-height: 50px;
   margin: auto;
   z-index: ${Z_INDEX.coverHeader};
 
@@ -107,7 +90,9 @@ export default function VideoCategory({
       footer={{ type: 'default' }}
     >
       <Wrapper>
-        {shouldShowAd && <StyledGPTAd_PC_HD pageKey="videohub" adKey="PC_HD" />}
+        <GPT_Placeholder_Desktop>
+          {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="PC_HD" />}
+        </GPT_Placeholder_Desktop>
         <LeadingVideo
           video={firstVideo}
           title={categoryName}
@@ -117,7 +102,9 @@ export default function VideoCategory({
             youtube: 'GTM-leading-video-yt-play',
           }}
         />
-        {shouldShowAd && <StyledGPTAd_MB_HD pageKey="videohub" adKey="MB_HD" />}
+        <GPT_Placeholder_MobileAndTablet>
+          {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="MB_HD" />}
+        </GPT_Placeholder_MobileAndTablet>
         {hasMoreThanOneVideo && (
           <CategoryVideos
             videoItems={remainingVideos}
@@ -125,7 +112,7 @@ export default function VideoCategory({
             categorySlug={category.slug}
           />
         )}
-        {shouldShowAd && <StickyGPTAd_MB_ST pageKey="videohub" adKey="MB_ST" />}
+        {shouldShowAd && <StickyGPTAd_MB_ST pageKey="videohub" />}
         {shouldShowAd && <FullScreenAds />}
       </Wrapper>
     </Layout>
