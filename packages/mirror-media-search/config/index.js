@@ -27,32 +27,27 @@ const PROGRAMABLE_SEARCH_API_KEY =
 
 // The following variables are given values according to different `ENV`
 let API_TIMEOUT = 3000
-let GA_MEASUREMENT_ID = ''
 let GTM_ID = ''
 let STATIC_FILE_DOMAIN = ''
 
 switch (ENV) {
   case 'prod':
     API_TIMEOUT = 1500
-    GA_MEASUREMENT_ID = 'G-341XFN0675'
     GTM_ID = 'GTM-NCH86SP'
     STATIC_FILE_DOMAIN = 'v3-statics.mirrormedia.mg'
     break
   case 'staging':
     API_TIMEOUT = 1500
-    GA_MEASUREMENT_ID = 'G-32D7P3MJ8B'
     GTM_ID = 'GTM-KVDZ27K'
     STATIC_FILE_DOMAIN = 'v3-statics-staging.mirrormedia.mg'
     break
   case 'dev':
     API_TIMEOUT = 5000
-    GA_MEASUREMENT_ID = 'G-36HYH6NF6P'
     GTM_ID = 'GTM-PBNLSMX'
     STATIC_FILE_DOMAIN = 'v3-statics-dev.mirrormedia.mg'
     break
   default:
     API_TIMEOUT = 5000
-    GA_MEASUREMENT_ID = 'G-36HYH6NF6P'
     GTM_ID = 'GTM-PBNLSMX'
     STATIC_FILE_DOMAIN = 'v3-statics-dev.mirrormedia.mg'
 }
@@ -78,6 +73,5 @@ export {
   PROGRAMABLE_SEARCH_ENGINE_ID,
   PROGRAMABLE_SEARCH_API_KEY,
   CORS_ORIGINS,
-  GA_MEASUREMENT_ID,
   GTM_ID,
 }
