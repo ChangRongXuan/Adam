@@ -653,6 +653,7 @@ export default function StoryNormalStyle({
           />
         )}
       </GPT_Placeholder>
+
       <Main className={classNameForGTM}>
         <Article>
           <SectionAndDate>
